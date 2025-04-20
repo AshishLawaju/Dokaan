@@ -8,6 +8,7 @@ const sequelize = new Sequelize(envConfig.connectionString as string)
 
 try {
     sequelize.authenticate().then(()=>{
+        
         console.log('connected to PG database');
         
     }).catch(err=>console.log(
@@ -15,6 +16,9 @@ try {
     )
     
     )
+
+
+    sequelize.sync()
 } catch (error) {
     console.log('failed to connected PG');
     
