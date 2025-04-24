@@ -1,1 +1,3 @@
 npx tsc --init
+
+on decorater from ts json line 17 18
