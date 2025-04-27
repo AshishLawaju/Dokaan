@@ -1,29 +1,44 @@
 import { configDotenv } from "dotenv";
 import { Sequelize } from "sequelize-typescript";
 import envConfig from "../config/config";
+import User from "../models/user.model";
 
-
-const sequelize = new Sequelize(envConfig.connectionString as string) 
-
-
-try {
-    sequelize.authenticate().then(()=>{
-        
-        console.log('connected to PG database');
-        
-    }).catch(err=>console.log(
-        `failed to connect PG ${err.message}`
-    )
-    
-    )
-
-
-    sequelize.sync()
-} catch (error) {
-    console.log('failed to connected PG');
-    
-}
+const sequelize = new Sequelize(envConfig.connectionString as string, {
+    dialect: 'postgres',
+    models: [User],
+  });
 
 
 
-export default sequelize
+
+  (async () => {
+    try {
+      await sequelize.authenticate();
+      console.log("Connected to PG database");
+  
+      await sequelize.sync({ force: false });
+      console.log("DB synced");
+    } catch (error: any) {
+      console.error("Failed to connect or sync DB:", error.message);
+    }
+  })();
+  
+
+// try {
+//   sequelize
+//     .authenticate()
+//     .then(() => {
+//       console.log("connected to PG database");
+//     })
+//     .catch((err) => console.log(`failed to connect PG ${err.message}`));
+
+//   sequelize
+//     .sync({
+//       force: false,
+//     })
+//     .then(() => console.log("db sync"));
+// } catch (error) {
+//   console.log("failed to connected PG");
+// }
+
+export default sequelize;

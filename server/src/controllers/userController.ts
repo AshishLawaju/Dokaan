@@ -14,6 +14,7 @@ class UserController {
         res.status(400).json({
           message: "Please provide username email password",
         });
+        return
       }
       const hash = await bcrypt.hash(password, 10);
       await User.create({
@@ -22,10 +23,19 @@ class UserController {
         password: hash,
       });
 
+      await sendMail({
+        to:email ,
+        subject:"Registration Sucessful",
+        text:"welcome to dookan"
+      })
       res.status(200).json({
         message: "User registered successful.",
       });
-    } catch (error) {}
+return
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   static async login(req: Request, res: Response) {
@@ -85,11 +95,15 @@ class UserController {
 
       if(!user) {
 
-        res.status(400).json({success:false , message:"Invalid email"})
+        res.status(404).json({success:false , message:"Invalid email"})
         return
       } 
 
         const otp = generateOTP()
+        user.OTP = otp.toString() 
+        user.OTPgenerateTime = Date.now().toString()
+
+        await user.save()
 
         sendMail({
           to:email,

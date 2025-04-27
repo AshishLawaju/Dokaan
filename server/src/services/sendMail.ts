@@ -8,28 +8,37 @@ interface IData {
 }
 
 const sendMail = async (data: IData) => {
+  if (!data.to || !data.subject || !data.text) {
+    throw new Error("Missing email data");
+  }
+
   const transporter = nodemailer.createTransport({
     host: envConfig.host,
     port: 587,
-    secure: false, // true for port 465, false for other ports
+    secure: false,
     auth: {
       user: envConfig.user,
       pass: envConfig.pass,
     },
   });
 
-  const mailOption = {
-    from: "Dookan <ashishlawaju143@gmail.com>",
+  const mailOptions = {
+    from: `Dookan <${envConfig.user}>`,
     to: data.to,
     subject: data.subject,
     text: data.text,
   };
 
   try {
-    await transporter.sendMail(mailOption);
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.messageId);
   } catch (error) {
-    console.log(error);
+    console.error("Error sending email:", error);
   }
+
+ 
+
+
 };
 
 export default sendMail;
