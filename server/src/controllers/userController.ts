@@ -16,6 +16,18 @@ class UserController {
         });
         return
       }
+
+
+      const [data] = await User.findAll({
+        where:{
+          email:email
+        }
+      })
+
+      if(data){
+        res.status(400).json({message : "Please Try later "})
+        return
+      }
       const hash = await bcrypt.hash(password, 10);
       await User.create({
         username,

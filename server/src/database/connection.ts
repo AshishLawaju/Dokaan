@@ -2,10 +2,12 @@ import { configDotenv } from "dotenv";
 import { Sequelize } from "sequelize-typescript";
 import envConfig from "../config/config";
 import User from "../models/user.model";
+import Product from "../models/product.model";
 
 const sequelize = new Sequelize(envConfig.connectionString as string, {
     dialect: 'postgres',
-    models: [User],
+    models: [User,Product],
+    // models:["../models"]
   });
 
 
@@ -16,7 +18,7 @@ const sequelize = new Sequelize(envConfig.connectionString as string, {
       await sequelize.authenticate();
       console.log("Connected to PG database");
   
-      await sequelize.sync({ force: false });
+      await sequelize.sync({ force: false ,alter:true});
       console.log("DB synced");
     } catch (error: any) {
       console.error("Failed to connect or sync DB:", error.message);
