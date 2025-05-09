@@ -25,13 +25,16 @@ class categoryController {
 
   async addCategory(req: Request, res: Response): Promise<void> {
     const { categoryName } = req.body;
+    console.log(categoryName);
+    
     if (!categoryName) {
       res.status(400).json({
         success: false,
         message: "please provide category name",
       });
+      return
     }
-    await Category.create(categoryName);
+    await Category.create({categoryName:categoryName});
 
     res.status(200).json({
       success: true,
