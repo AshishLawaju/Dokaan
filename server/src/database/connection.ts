@@ -23,6 +23,13 @@ const sequelize = new Sequelize(envConfig.connectionString as string, {
   }
 })();
 
+
+//relationship
+
+Product.belongsTo(Category)
+Category.hasOne(Product)
+
+
 // try {
 //   sequelize
 //     .authenticate()
