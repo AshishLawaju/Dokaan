@@ -59,6 +59,14 @@ class UserMiddleware {
   restrictTo(...roles: Role[]) {
     return (req: IExtendedRequest, res: Response, next: NextFunction) => {
       let userRole = req.user?.role as Role;
+
+      if(!roles.includes(userRole)){
+        res.status(403).json({
+          message:"You don't have permission"
+        })
+        return
+      }
+      next()
     };
   }
 }
