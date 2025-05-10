@@ -1,10 +1,25 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import envConfig from "../config/config";
+import User from "../models/user.model";
+
+export enum Role {
+  Admin = "admin",
+  Customer = "customer",
+}
+
+interface IExtendedRequest extends Request {
+  user?: {
+    username: string;
+    email: string;
+    role: string;
+    id: string;
+  };
+}
 
 class UserMiddleware {
   async isUserLoggedIn(
-    req: Request,
+    req: IExtendedRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
@@ -17,21 +32,34 @@ class UserMiddleware {
 
     console.log(token);
 
-    jwt.verify(token, envConfig.secretKey as string, async (err, result) => {
-      if (err) {
-        res.status(403).json({
-          message: "Invalid Token",
-        });
-        console.log(err);
+    jwt.verify(
+      token,
+      envConfig.secretKey as string,
+      async (err, result: any) => {
+        if (err) {
+          res.status(403).json({
+            message: "Invalid Token",
+          });
+          console.log(err);
 
-        return;
-      } else {
-        console.log(result);
-        //@ts-ignore
-        req.userId = result.userId;
-        next();
+          return;
+        } else {
+          console.log(result);
+
+          const userData = await User.findByPk(result.userId);
+          if (userData) {
+            req.user = userData;
+          }
+          next();
+        }
       }
-    });
+    );
+  }
+
+  restrictTo(...roles: Role[]) {
+    return (req: IExtendedRequest, res: Response, next: NextFunction) => {
+      let userRole = req.user?.role as Role;
+    };
   }
 }
 
