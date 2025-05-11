@@ -3,6 +3,7 @@ import productController from "../controllers/productController";
 import userMiddleware, { Role } from "../middleware/userMiddleware";
 import multer from "multer";
 import { storage } from "../middleware/multerMiddleware";
+import errorHandler from "../services/errorHandler";
 
 const router: Router = Router();
 const upload = multer({ storage: storage });
@@ -12,9 +13,10 @@ router
     userMiddleware.isUserLoggedIn,
     userMiddleware.restrictTo(Role.Admin),
     upload.single("productImage"),
-    productController.createProduct
+
+    errorHandler(productController.createProduct)
   )
-  .get(productController.getAllProducts);
+  .get(errorHandler(productController.getAllProducts));
 
 router
   .route("/:id")
