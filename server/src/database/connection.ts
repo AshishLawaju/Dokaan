@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { Sequelize } from "sequelize-typescript";
+import { ForeignKey, Sequelize } from "sequelize-typescript";
 import envConfig from "../config/config";
 import User from "../models/user.model";
 import Product from "../models/product.model";
@@ -26,8 +26,8 @@ const sequelize = new Sequelize(envConfig.connectionString as string, {
 
 //relationship
 
-Product.belongsTo(Category)
-Category.hasOne(Product)
+Product.belongsTo(Category,{foreignKey:"categoryId"})
+Category.hasOne(Product,{foreignKey:"categoryId"})
 
 
 // try {
