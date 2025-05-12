@@ -4,10 +4,13 @@ import envConfig from "../config/config";
 import User from "../models/user.model";
 import Product from "../models/product.model";
 import Category from "../models/category.model";
+import Order from "../models/order.model";
+import Payment from "../models/paymentMethod.model";
+import OrderDetails from "../models/orderDetails.model";
 
 const sequelize = new Sequelize(envConfig.connectionString as string, {
   dialect: "postgres",
-  models: [User, Product, Category],
+  models: [User, Product, Category,Order,Payment,OrderDetails],
   // models:["../models"]
 });
 
@@ -28,6 +31,8 @@ const sequelize = new Sequelize(envConfig.connectionString as string, {
 
 Product.belongsTo(Category,{foreignKey:"categoryId"})
 Category.hasOne(Product,{foreignKey:"categoryId"})
+
+
 
 
 // try {

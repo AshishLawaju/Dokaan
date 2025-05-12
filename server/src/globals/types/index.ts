@@ -6,3 +6,10 @@ export enum OrderStatus {
   Cancelled = "cancelled"
 
 }
+
+
+export enum PaymentMethod {
+    Khalti = "khalti",
+    Esewa = "esewa",
+    COD = "cod"
+}
