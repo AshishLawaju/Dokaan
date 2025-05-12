@@ -29,9 +29,23 @@ const sequelize = new Sequelize(envConfig.connectionString as string, {
 
 //relationship
 
-Product.belongsTo(Category,{foreignKey:"categoryId"})
 Category.hasOne(Product,{foreignKey:"categoryId"})
+Product.belongsTo(Category,{foreignKey:"categoryId"})
 
+
+User.hasMany(Order,{foreignKey:"userId"})  //give capital so use foreign key natra it gives OrderId in table
+Order.belongsTo(User,{foreignKey:"userId"}) 
+
+//payment ma order
+Order.hasOne(Payment,{foreignKey:"orderId"})
+Payment.belongsTo(Order,{foreignKey:"orderId"})
+
+//order
+Order.hasOne(OrderDetails,{foreignKey:"orderId"})
+OrderDetails.belongsTo(Order,{foreignKey:"orderId"})
+
+Product.hasMany(OrderDetails,{foreignKey:"productId"})
+OrderDetails.belongsTo(Product,{foreignKey:"productId"})
 
 
 
